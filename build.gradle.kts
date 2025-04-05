@@ -18,6 +18,7 @@ allprojects {
         type.set(me.philippheuer.projectcfg.domain.ProjectType.LIBRARY)
         javaVersion.set(JavaVersion.VERSION_17)
         artifactGroupId.set("io.github.iprodigy.bttv")
+        javadocLombok.set(false)
 
         pom = {
             it.url.set("https://github.com/iProdigy/bttv4j")
