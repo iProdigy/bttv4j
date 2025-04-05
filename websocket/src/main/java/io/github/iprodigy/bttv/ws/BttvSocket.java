@@ -6,6 +6,7 @@ import com.github.philippheuer.events4j.core.EventManager;
 import io.github.iprodigy.bttv.common.Provider;
 import io.github.iprodigy.bttv.common.internal.SharedResources;
 import io.github.iprodigy.bttv.ws.internal.JoinChannelPayload;
+import io.github.iprodigy.bttv.ws.internal.OkSocket;
 import io.github.iprodigy.bttv.ws.internal.PartChannelPayload;
 import io.github.iprodigy.bttv.ws.internal.Payload;
 import io.github.iprodigy.bttv.ws.internal.UserBroadcastPayload;
