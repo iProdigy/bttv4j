@@ -9,7 +9,7 @@ public final class JoinChannelPayload extends Payload<ChannelData> {
         this.name = PayloadType.JOIN_CHANNEL;
     }
 
-    JoinChannelPayload(ChannelData data) {
+    public JoinChannelPayload(ChannelData data) {
         this();
         this.data = data;
     }

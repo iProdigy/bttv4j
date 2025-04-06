@@ -27,7 +27,7 @@ public class OkSocket<D> implements AutoCloseable {
     private final AtomicReference<WebSocket> webSocket = new AtomicReference<>();
     private volatile boolean closed = false;
 
-    public OkSocket(OkHttpClient client, String url, ScheduledExecutorService executor, ObjectMapper mapper, Class<D> payloadClass, Consumer<D> consumer) {
+    public OkSocket(OkHttpClient client, String url, ScheduledExecutorService executor, ObjectMapper mapper, Class<D> payloadClass, Runnable connected, Consumer<D> consumer) {
         this.mapper = mapper;
         this.client = client;
         this.request = new Request.Builder().url(url).build();
@@ -64,6 +64,11 @@ public class OkSocket<D> implements AutoCloseable {
                 if (webSocket.compareAndSet(ws, null)) {
                     executor.schedule(OkSocket.this::createSocket, 10L, TimeUnit.SECONDS);
                 }
+            }
+
+            @Override
+            public void onOpen(@NonNull WebSocket webSocket, @NonNull Response response) {
+                executor.execute(connected);
             }
         };
         this.createSocket();
