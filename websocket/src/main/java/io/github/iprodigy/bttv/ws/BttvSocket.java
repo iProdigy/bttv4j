@@ -10,12 +10,36 @@ import io.github.iprodigy.bttv.ws.internal.OkSocket;
 import io.github.iprodigy.bttv.ws.internal.PartChannelPayload;
 import io.github.iprodigy.bttv.ws.internal.Payload;
 import io.github.iprodigy.bttv.ws.internal.UserBroadcastPayload;
+import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
+/**
+ * Implementation of BetterTTV's Websocket API.
+ * <p>
+ * Call {@link BttvSocket#joinChannel(Provider, String)} to receive events associated with the given channel.
+ * <p>
+ * You may later call {@link BttvSocket#partChannel(Provider, String)} to stop receiving events from any given channel.
+ * <p>
+ * After joining the initial channels, you should call {@link BttvSocket#broadcastMe(Provider, String, String)}.
+ * <p>
+ * In addition, you should call {@link BttvSocket#broadcastMe(Provider, String, String)} whenever you
+ * programmatically send messages to the channel with BetterTTV emotes.
+ * <p>
+ * Once channels have been joined, {@link BttvSocket#getEventManager()} can fire:
+ * <ul>
+ *     <li>{@link io.github.iprodigy.bttv.ws.domain.EmoteCreateEvent}</li>
+ *     <li>{@link io.github.iprodigy.bttv.ws.domain.EmoteUpdateEvent}</li>
+ *     <li>{@link io.github.iprodigy.bttv.ws.domain.EmoteDeleteEvent}</li>
+ *     <li>{@link io.github.iprodigy.bttv.ws.domain.UserUpdateEvent}</li>
+ * </ul>
+ *
+ * @see <a href="https://betterttv.com/developers/websocket">Official Documentation</a>
+ */
 @SuppressWarnings("unused")
 public final class BttvSocket implements AutoCloseable {
     private static final String URL = "wss://sockets.betterttv.net/ws";
@@ -41,10 +65,20 @@ public final class BttvSocket implements AutoCloseable {
         });
     }
 
-    public BttvSocket(IEventManager eventManager, ScheduledExecutorService executor) {
+    /**
+     * Constructs a {@link BttvSocket}.
+     *
+     * @param eventManager {@link IEventManager}
+     * @param executor     {@link ScheduledExecutorService}
+     * @apiNote When using this constructor, {@link BttvSocket#close()} does not call {@link ExecutorService#shutdown()} on the passed executor.
+     */
+    public BttvSocket(@NonNull IEventManager eventManager, @NonNull ScheduledExecutorService executor) {
         this(eventManager, executor, false);
     }
 
+    /**
+     * Constructs a {@link BttvSocket}.
+     */
     public BttvSocket() {
         this(createEventManager(), Executors.newSingleThreadScheduledExecutor(), true);
     }
@@ -58,18 +92,45 @@ public final class BttvSocket implements AutoCloseable {
         }
     }
 
+    /**
+     * Joining a channel will subscribe you to its events, such as emote and user updates.
+     *
+     * @param provider   The name of the platform.
+     * @param providerId Platform user ID for the specified provider.
+     * @return whether the join request was sent.
+     */
     public boolean joinChannel(Provider provider, String providerId) {
         return socket.send(JoinChannelPayload.of(provider, providerId));
     }
 
+    /**
+     * Parting a channel will unsubscribe you from its events.
+     *
+     * @param provider   The name of the platform.
+     * @param providerId Platform user ID for the specified provider.
+     * @return whether the part request was sent.
+     */
     public boolean partChannel(Provider provider, String providerId) {
         return socket.send(PartChannelPayload.of(provider, providerId));
     }
 
+    /**
+     * Broadcasts your user information, if any, to other clients in the same channel.
+     * <p>
+     * This should be sent when messages are sent by the user.
+     *
+     * @param provider          The name of the platform.
+     * @param providerChannelId Platform channel ID for specified provider.
+     * @param providerUserId    Platform user ID for specified provider.
+     * @return whether the broadcast message was sent.
+     */
     public boolean broadcastMe(Provider provider, String providerChannelId, String providerUserId) {
         return socket.send(UserBroadcastPayload.of(provider, providerChannelId, providerUserId));
     }
 
+    /**
+     * @return the {@link IEventManager} that will receive BetterTTV events
+     */
     public IEventManager getEventManager() {
         return eventManager;
     }

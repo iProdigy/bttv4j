@@ -10,6 +10,11 @@ import org.jspecify.annotations.NullMarked;
 
 import java.util.Collection;
 
+/**
+ * BetterTTV REST API Endpoints
+ *
+ * @see <a href="https://betterttv.com/developers/api">Official Documentation</a>
+ */
 @NullMarked
 public interface BetterTTV {
 
