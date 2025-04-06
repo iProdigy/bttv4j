@@ -5,15 +5,20 @@ import com.github.philippheuer.events4j.api.service.IEventHandler;
 import com.github.philippheuer.events4j.core.EventManager;
 import io.github.iprodigy.bttv.common.Provider;
 import io.github.iprodigy.bttv.common.internal.SharedResources;
+import io.github.iprodigy.bttv.ws.domain.Channel;
 import io.github.iprodigy.bttv.ws.internal.JoinChannelPayload;
 import io.github.iprodigy.bttv.ws.internal.OkSocket;
 import io.github.iprodigy.bttv.ws.internal.PartChannelPayload;
 import io.github.iprodigy.bttv.ws.internal.Payload;
 import io.github.iprodigy.bttv.ws.internal.UserBroadcastPayload;
+import io.github.iprodigy.bttv.ws.internal.data.ChannelData;
 import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -53,11 +58,14 @@ public final class BttvSocket implements AutoCloseable {
     private final ScheduledExecutorService executor;
     private final boolean shouldClose;
 
+    private final Set<ChannelData> channels = Collections.synchronizedSet(new HashSet<>());
+    private volatile Channel lastBroadcast = null;
+
     private BttvSocket(IEventManager eventManager, ScheduledExecutorService executor, boolean shouldClose) {
         this.eventManager = eventManager;
         this.executor = executor;
         this.shouldClose = shouldClose;
-        this.socket = new OkSocket<>(SharedResources.HTTP_CLIENT, URL, executor, SharedResources.JSON_MAPPER, Payload.class, payload -> {
+        this.socket = new OkSocket<>(SharedResources.HTTP_CLIENT, URL, executor, SharedResources.JSON_MAPPER, Payload.class, this::handleReconnect, payload -> {
             switch (payload.getName()) {
                 case EMOTE_CREATE, EMOTE_UPDATE, EMOTE_DELETE, LOOKUP_USER -> eventManager.publish(payload.getData());
                 default -> log.warn("Encountered unexpected payload: {}", payload);
@@ -100,7 +108,9 @@ public final class BttvSocket implements AutoCloseable {
      * @return whether the join request was sent.
      */
     public boolean joinChannel(Provider provider, String providerId) {
-        return socket.send(JoinChannelPayload.of(provider, providerId));
+        var data = new ChannelData(provider, providerId);
+        channels.add(data);
+        return socket.send(new JoinChannelPayload(data));
     }
 
     /**
@@ -111,7 +121,9 @@ public final class BttvSocket implements AutoCloseable {
      * @return whether the part request was sent.
      */
     public boolean partChannel(Provider provider, String providerId) {
-        return socket.send(PartChannelPayload.of(provider, providerId));
+        var data = new ChannelData(provider, providerId);
+        channels.remove(data);
+        return socket.send(new PartChannelPayload(data));
     }
 
     /**
@@ -125,6 +137,7 @@ public final class BttvSocket implements AutoCloseable {
      * @return whether the broadcast message was sent.
      */
     public boolean broadcastMe(Provider provider, String providerChannelId, String providerUserId) {
+        this.lastBroadcast = new Channel(provider, providerUserId);
         return socket.send(UserBroadcastPayload.of(provider, providerChannelId, providerUserId));
     }
 
@@ -133,6 +146,14 @@ public final class BttvSocket implements AutoCloseable {
      */
     public IEventManager getEventManager() {
         return eventManager;
+    }
+
+    private void handleReconnect() {
+        this.channels.forEach(data -> socket.send(new JoinChannelPayload(data)));
+        var lookup = this.lastBroadcast;
+        if (lookup != null) {
+            broadcastMe(lookup.provider(), lookup.providerId(), lookup.providerId());
+        }
     }
 
     private static EventManager createEventManager() {

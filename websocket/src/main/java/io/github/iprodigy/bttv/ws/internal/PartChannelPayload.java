@@ -9,7 +9,7 @@ public final class PartChannelPayload extends Payload<ChannelData> {
         this.name = PayloadType.PART_CHANNEL;
     }
 
-    PartChannelPayload(ChannelData data) {
+    public PartChannelPayload(ChannelData data) {
         this();
         this.data = data;
     }
