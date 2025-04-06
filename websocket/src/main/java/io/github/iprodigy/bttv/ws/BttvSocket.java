@@ -93,6 +93,8 @@ public final class BttvSocket implements AutoCloseable {
 
     @Override
     public void close() throws Exception {
+        lastBroadcast = null;
+        channels.clear();
         socket.close();
         if (shouldClose) {
             executor.shutdown();

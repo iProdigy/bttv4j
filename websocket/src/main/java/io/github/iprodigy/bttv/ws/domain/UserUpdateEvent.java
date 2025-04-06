@@ -7,6 +7,8 @@ import org.jspecify.annotations.Nullable;
 import java.util.List;
 
 /**
+ * Usually on channel join, this is event is triggered when a user broadcasts themselves to other clients.
+ *
  * @param name       User's platform username.
  * @param providerId User's platform user id.
  * @param channel    The channel the change occurred in.
