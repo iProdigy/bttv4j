@@ -1,6 +1,6 @@
 # BTTV4J
 
-Modular Java wrapper for the [BetterTTV API](https://betterttv.com/developers/api) and [WebSocket](https://betterttv.com/developers/websocket).
+Modular Java wrapper for [BetterTTV](https://betterttv.com/)'s [REST API](https://betterttv.com/developers/api) and [WebSocket](https://betterttv.com/developers/websocket) interface.
 
 ## REST API
 
@@ -34,3 +34,9 @@ String channelId = "53888434", userId = "149223493";
 ws.joinChannel(Provider.TWITCH, channelId);
 ws.broadcastMe(Provider.TWITCH, channelId, userId);
 ```
+
+## Notice
+
+This project is not affiliated, associated, authorized, endorsed by, or in any way officially connected with BetterTTV or NightDev, LLC. or Twitch Interactive.
+
+All trademarks are property of their respective owners, and this project does not grant any rights to any trademarks.
