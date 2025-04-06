@@ -3,7 +3,7 @@ plugins {
     id("me.philippheuer.configuration") version "0.15.2"
 }
 
-version = "1.0.0-SNAPSHOT"
+version = properties["version"] as String
 
 allprojects {
     apply(plugin = "me.philippheuer.configuration")
@@ -40,6 +40,11 @@ allprojects {
                     distribution.set("repo")
                     url.set("https://github.com/iProdigy/bttv4j/blob/main/LICENSE")
                 }
+            }
+            it.scm {
+                connection.set("scm:git:https://github.com/iProdigy/bttv4j.git")
+                developerConnection.set("scm:git:git@github.com:iProdigy/bttv4j.git")
+                url.set("https://github.com/iProdigy/bttv4j")
             }
         }
     }
