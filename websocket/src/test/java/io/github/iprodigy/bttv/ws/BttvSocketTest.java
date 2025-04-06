@@ -28,6 +28,8 @@ class BttvSocketTest {
             assertTrue(ws.joinChannel(Provider.TWITCH, channelId));
             assertTrue(ws.broadcastMe(Provider.TWITCH, channelId, userId));
             Thread.sleep(Duration.ofMinutes(5L));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 

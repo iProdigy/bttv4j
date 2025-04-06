@@ -13,6 +13,10 @@ import io.github.iprodigy.bttv.ws.internal.UserBroadcastPayload;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+
+@SuppressWarnings("unused")
 public final class BttvSocket implements AutoCloseable {
     private static final String URL = "wss://sockets.betterttv.net/ws";
 
@@ -22,10 +26,14 @@ public final class BttvSocket implements AutoCloseable {
     private final OkSocket<Payload> socket;
 
     private final IEventManager eventManager;
+    private final ScheduledExecutorService executor;
+    private final boolean shouldClose;
 
-    public BttvSocket(IEventManager eventManager) {
+    private BttvSocket(IEventManager eventManager, ScheduledExecutorService executor, boolean shouldClose) {
         this.eventManager = eventManager;
-        this.socket = new OkSocket<>(SharedResources.HTTP_CLIENT, URL, SharedResources.JSON_MAPPER, Payload.class, payload -> {
+        this.executor = executor;
+        this.shouldClose = shouldClose;
+        this.socket = new OkSocket<>(SharedResources.HTTP_CLIENT, URL, executor, SharedResources.JSON_MAPPER, Payload.class, payload -> {
             switch (payload.getName()) {
                 case EMOTE_CREATE, EMOTE_UPDATE, EMOTE_DELETE, LOOKUP_USER -> eventManager.publish(payload.getData());
                 default -> log.warn("Encountered unexpected payload: {}", payload);
@@ -33,13 +41,21 @@ public final class BttvSocket implements AutoCloseable {
         });
     }
 
+    public BttvSocket(IEventManager eventManager, ScheduledExecutorService executor) {
+        this(eventManager, executor, false);
+    }
+
     public BttvSocket() {
-        this(createEventManager());
+        this(createEventManager(), Executors.newSingleThreadScheduledExecutor(), true);
     }
 
     @Override
-    public void close() {
+    public void close() throws Exception {
         socket.close();
+        if (shouldClose) {
+            executor.shutdown();
+            eventManager.close();
+        }
     }
 
     public boolean joinChannel(Provider provider, String providerId) {

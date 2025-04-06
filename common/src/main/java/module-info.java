@@ -1,5 +1,6 @@
 module bttv4j.common {
     requires com.fasterxml.jackson.annotation;
+    requires transitive com.fasterxml.jackson.core;
     requires com.fasterxml.jackson.databind;
     requires com.fasterxml.jackson.datatype.jsr310;
     requires static okhttp3; // for SharedResources
