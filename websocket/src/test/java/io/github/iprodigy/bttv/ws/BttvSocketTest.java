@@ -18,7 +18,7 @@ class BttvSocketTest {
     private final String userId = "149223493";
 
     @Test
-    void localTest() throws InterruptedException {
+    void localTest() {
         try (BttvSocket ws = new BttvSocket()) {
             ws.getEventManager().onEvent(EmoteCreateEvent.class, System.out::println);
             ws.getEventManager().onEvent(EmoteUpdateEvent.class, System.out::println);
@@ -27,7 +27,7 @@ class BttvSocketTest {
 
             assertTrue(ws.joinChannel(Provider.TWITCH, channelId));
             assertTrue(ws.broadcastMe(Provider.TWITCH, channelId, userId));
-            Thread.sleep(Duration.ofMinutes(5L));
+            Thread.sleep(Duration.ofMinutes(5L).toMillis());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
