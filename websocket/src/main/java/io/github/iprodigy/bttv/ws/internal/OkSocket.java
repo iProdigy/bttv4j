@@ -13,6 +13,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
@@ -25,7 +27,7 @@ public class OkSocket<D> implements AutoCloseable {
     private final AtomicReference<WebSocket> webSocket = new AtomicReference<>();
     private volatile boolean closed = false;
 
-    public OkSocket(OkHttpClient client, String url, ObjectMapper mapper, Class<D> payloadClass, Consumer<D> consumer) {
+    public OkSocket(OkHttpClient client, String url, ScheduledExecutorService executor, ObjectMapper mapper, Class<D> payloadClass, Consumer<D> consumer) {
         this.mapper = mapper;
         this.client = client;
         this.request = new Request.Builder().url(url).build();
@@ -42,7 +44,7 @@ public class OkSocket<D> implements AutoCloseable {
                     return;
                 }
 
-                consumer.accept(d);
+                executor.execute(() -> consumer.accept(d));
             }
 
             @Override
@@ -60,7 +62,7 @@ public class OkSocket<D> implements AutoCloseable {
 
                 // prepare new socket
                 if (webSocket.compareAndSet(ws, null)) {
-                    OkSocket.this.createSocket();
+                    executor.schedule(OkSocket.this::createSocket, 10L, TimeUnit.SECONDS);
                 }
             }
         };
