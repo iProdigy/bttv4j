@@ -1,4 +1,4 @@
-package io.github.iprodigy.bttv.ws;
+package io.github.iprodigy.bttv.ws.internal;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
-class OkSocket<D> implements AutoCloseable {
+public class OkSocket<D> implements AutoCloseable {
     private static final Logger log = LoggerFactory.getLogger(OkSocket.class);
     private final ObjectMapper mapper;
     private final OkHttpClient client;
@@ -25,7 +25,7 @@ class OkSocket<D> implements AutoCloseable {
     private final AtomicReference<WebSocket> webSocket = new AtomicReference<>();
     private volatile boolean closed = false;
 
-    OkSocket(OkHttpClient client, String url, ObjectMapper mapper, Class<D> payloadClass, Consumer<D> consumer) {
+    public OkSocket(OkHttpClient client, String url, ObjectMapper mapper, Class<D> payloadClass, Consumer<D> consumer) {
         this.mapper = mapper;
         this.client = client;
         this.request = new Request.Builder().url(url).build();
