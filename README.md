@@ -1,5 +1,8 @@
 # BTTV4J
 
+[![Latest](https://img.shields.io/github/release/iProdigy/bttv4j/all.svg?style=flate&label=latest)](https://central.sonatype.com/namespace/io.github.iprodigy.bttv)
+[![Javadoc](https://javadoc.io/badge2/io.github.iprodigy.bttv/bttv4j-common/javadoc.svg)](https://javadoc.io/doc/io.github.iprodigy.bttv)
+
 Modular Java wrapper for [BetterTTV](https://betterttv.com/)'s [REST API](https://betterttv.com/developers/api) and [WebSocket](https://betterttv.com/developers/websocket) interface.
 
 ## REST API
