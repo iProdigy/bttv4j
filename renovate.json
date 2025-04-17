@@ -5,6 +5,7 @@
     ":prHourlyLimitNone",
     ":prConcurrentLimitNone",
     ":disableDependencyDashboard",
+    ":semanticCommitTypeAll(chore)",
     ":separateMultipleMajorReleases",
     ":combinePatchMinorReleases",
     ":pinVersions"
