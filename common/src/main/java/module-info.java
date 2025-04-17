@@ -3,6 +3,7 @@ module bttv4j.common {
     requires transitive com.fasterxml.jackson.core;
     requires com.fasterxml.jackson.databind;
     requires com.fasterxml.jackson.datatype.jsr310;
+    requires static kotlin.stdlib; // https://github.com/square/okhttp/issues/8194
     requires static okhttp3; // for SharedResources
     requires static org.jspecify;
 
