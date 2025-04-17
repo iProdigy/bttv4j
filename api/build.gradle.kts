@@ -11,6 +11,9 @@ projectConfiguration {
 dependencies {
     api(project(":common"))
 
+    implementation(platform("com.fasterxml.jackson:jackson-bom:2.18.3"))
+    implementation(group = "com.fasterxml.jackson.datatype", name = "jackson-datatype-jsr310")
+
     implementation(platform("io.github.openfeign:feign-bom:13.5"))
     implementation(group = "io.github.openfeign", name = "feign-core")
     implementation(group = "io.github.openfeign", name = "feign-jackson")
