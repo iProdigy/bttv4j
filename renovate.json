@@ -1,6 +1,30 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "config:recommended"
-  ]
+    "config:recommended",
+    ":prHourlyLimitNone",
+    ":prConcurrentLimitNone",
+    ":disableDependencyDashboard",
+    ":separateMultipleMajorReleases",
+    ":combinePatchMinorReleases",
+    ":pinVersions"
+  ],
+  "baseBranches": ["main"],
+  "branchPrefix": "chore/dependencies/",
+  "digest": {
+    "enabled": false
+  },
+  "labels": ["dependencies"],
+  "packageRules": [
+    {
+      "matchPackagePatterns": ["*"],
+      "semanticCommitType": "chore"
+    }
+  ],
+  "rebaseWhen": "behind-base-branch",
+  "reviewers": ["iProdigy"],
+  "vulnerabilityAlerts": {
+    "assignees": ["iProdigy"],
+    "labels": ["dependencies", "security"]
+  }
 }
