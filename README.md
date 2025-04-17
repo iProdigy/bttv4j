@@ -38,6 +38,27 @@ ws.joinChannel(Provider.TWITCH, channelId);
 ws.broadcastMe(Provider.TWITCH, channelId, userId);
 ```
 
+## Installation
+
+This library is published to [Maven Central](https://central.sonatype.com/namespace/io.github.iprodigy.bttv) in a modular format, so you can decide to
+only pull the REST API component or only pull the WebSocket component, depending on your use case.
+
+```xml
+<!-- For REST API -->
+<dependency>
+    <groupId>io.github.iprodigy.bttv</groupId>
+    <artifactId>bttv4j-api</artifactId>
+    <version>1.0.0</version>
+</dependency>
+
+<!-- For WebSocket Events -->
+<dependency>
+    <groupId>io.github.iprodigy.bttv</groupId>
+    <artifactId>bttv4j-ws</artifactId>
+    <version>1.0.0</version>
+</dependency>
+```
+
 ## Notice
 
 This project is not affiliated, associated, authorized, endorsed by, or in any way officially connected with BetterTTV or NightDev, LLC. or Twitch Interactive.
