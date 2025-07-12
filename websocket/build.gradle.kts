@@ -1,6 +1,6 @@
 plugins {
     `java-library`
-    id("org.gradlex.extra-java-module-info") version "1.12"
+    id("org.gradlex.extra-java-module-info") version "1.13"
 }
 
 projectConfiguration {
