@@ -3,7 +3,7 @@ events4j-bom = { module = "com.github.philippheuer.events4j:events4j-bom", versi
 feign-bom = { module = "io.github.openfeign:feign-bom", version = "13.6" }
 jackson-bom = { module = "com.fasterxml.jackson:jackson-bom", version = "2.20.1" }
 jspecify = { module = "org.jspecify:jspecify", version = "1.0.0" }
-okhttp = { module = "com.squareup.okhttp3:okhttp", version = "4.12.0" }
+okhttp = { module = "com.squareup.okhttp3:okhttp", version = "5.3.0" }
 resilience4j-bom = { module = "io.github.resilience4j:resilience4j-bom", version = "2.3.0" }
 slf4j-bom = { module = "org.slf4j:slf4j-bom", version = "2.0.17" }
 
