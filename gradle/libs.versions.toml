@@ -8,4 +8,4 @@ resilience4j-bom = { module = "io.github.resilience4j:resilience4j-bom", version
 slf4j-bom = { module = "org.slf4j:slf4j-bom", version = "2.0.17" }
 
 [plugins]
-configuration = { id = "me.philippheuer.configuration", version = "0.18.0" }
+configuration = { id = "me.philippheuer.configuration", version = "0.19.0" }
