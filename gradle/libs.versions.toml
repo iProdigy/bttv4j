@@ -1,5 +1,5 @@
 [libraries]
-events4j-bom = { module = "com.github.philippheuer.events4j:events4j-bom", version = "0.12.2" }
+events4j-bom = { module = "com.github.philippheuer.events4j:events4j-bom", version = "0.12.3" }
 feign-bom = { module = "io.github.openfeign:feign-bom", version = "13.6" }
 jackson-bom = { module = "com.fasterxml.jackson:jackson-bom", version = "2.20.1" }
 jspecify = { module = "org.jspecify:jspecify", version = "1.0.0" }
