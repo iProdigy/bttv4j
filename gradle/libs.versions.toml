@@ -1,6 +1,6 @@
 [libraries]
 events4j-bom = { module = "com.github.philippheuer.events4j:events4j-bom", version = "0.12.3" }
-feign-bom = { module = "io.github.openfeign:feign-bom", version = "13.8.1" }
+feign-bom = { module = "io.github.openfeign:feign-bom", version = "13.9" }
 jackson-bom = { module = "com.fasterxml.jackson:jackson-bom", version = "2.21.0" }
 jspecify = { module = "org.jspecify:jspecify", version = "1.0.0" }
 okhttp = { module = "com.squareup.okhttp3:okhttp", version = "5.3.2" }
